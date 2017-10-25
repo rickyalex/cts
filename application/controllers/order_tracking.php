@@ -26,6 +26,7 @@ class Order_tracking extends CI_Controller {
         $this->load->model('cts_model');
 
         $this->DB = $this->ion_auth_model->getDB();
+        $this->DB2 = $this->ion_auth_model->getDB2();
         $this->APP = $this->commons->getAPP();
 
         $this->table = 't_voyage';
@@ -117,13 +118,33 @@ class Order_tracking extends CI_Controller {
 		$customer[$key]["text"] = $customer[$key]["text"];
             }
             
+            $pic_marketing = $this->cts_model->getAllPIC();
+            
             $data['customer'] = $customer;
+            $data['pic_marketing'] = $pic_marketing;
             $data['order_no'] = "01".Date('Ymd').sprintf('%05d', $this->cts_model->getRunningNumber("t_order"));
             $data['mode'] = "insert";
         }
         $this->load->view('template/header');
             $this->load->view('template/sidebar');
             $this->load->view('order_tracking_form',$data);
+            $this->load->view('template/footer');
+    }
+    
+    function viewBookedOrder(){
+        if ($this->uri->segment(3) !== FALSE)
+        {
+            $data['next_delivery_schedule'] = $this->uri->segment(4);
+        }
+        $order = $this->cts_model->viewBookedOrder($data['next_delivery_schedule']);
+        foreach($order as $row => $item){
+		$order[$row]["customer"] = $this->cts_model->getCustomerName($order[$row]["customer_id"]);
+            }
+        $data['order'] = $order;
+            
+        $this->load->view('template/header');
+            $this->load->view('template/sidebar');
+            $this->load->view('booked_order',$data);
             $this->load->view('template/footer');
     }
     
@@ -137,6 +158,7 @@ class Order_tracking extends CI_Controller {
             
             foreach($arr as $ar => $item){
                 $arr[$ar]['customer'] = $this->cts_model->getCustomerNameByLogin($arr[$ar]['customer_id']);
+                $arr[$ar]['container_no'] = isset($arr[$ar]['container_no']) ? $this->cts_model->getContainerNo($arr[$ar]['container_no']) : '-';
             }
         }
         echo json_encode($arr);
@@ -152,18 +174,14 @@ class Order_tracking extends CI_Controller {
                 if(GROUPNAME=="Marketing") {
                     $arr[$ar]['unit_id'] = isset($arr[$ar]['unit_id']) ? $this->cts_model->getNomorUnit($arr[$ar]['unit_id']) : '-';
                     $arr[$ar]['container_no'] = isset($arr[$ar]['container_no']) ? $this->cts_model->getContainerNo($arr[$ar]['container_no']) : '-';
+                    $arr[$ar]['action'] = "<a href='#' class='xcrud-action btn btn-info btn-sm' onClick='viewOrderHistory(".'"'.$arr[$ar]['id'].'"'.");'><i class='fa fa-search'></i></a><a href='#' class='xcrud-action btn btn-danger btn-sm' onClick='removeOrder(".'"'.$arr[$ar]['id'].'"'.");'><i class='fa fa-remove'></i></a>";
                 }
-                elseif(GROUPNAME=="TR" || GROUPNAME=="OCS"){
-                    $arr[$ar]['container_no'] = isset($arr[$ar]['container_no']) ? $this->cts_model->getContainerNo($arr[$ar]['container_no']) : '-';
-                }
-                elseif(GROUPNAME=="RW"){
-                    $arr[$ar]['unit_id'] = isset($arr[$ar]['unit_id']) ? $this->cts_model->getNomorUnit($arr[$ar]['unit_id']) : '-';
-                }
+                elseif(GROUPNAME=="RW") $arr[$ar]['action'] = "<a href='#' class='xcrud-action btn btn-info btn-sm' onClick='viewOrderHistory(".'"'.$arr[$ar]['id'].'"'.");'><i class='fa fa-search'></i></a><a href='#' class='xcrud-action btn btn-success btn-sm' onClick='closeOrder(".'"'.$arr[$ar]['id'].'"'.");'><i class='fa fa-check'></i></a>";
                 
                 if($arr[$ar]['order_status']=="ON PROGRESS") $arr[$ar]['order_status'] = "<span class='text-info'><b>".$arr[$ar]['order_status']."</b></span>";
                 elseif($arr[$ar]['order_status']=="WAITING FOR OPERATION") $arr[$ar]['order_status'] = "<span class='text-warning'><b>".$arr[$ar]['order_status']."</b></span>";
                 elseif($arr[$ar]['order_status']=="COMPLETED") $arr[$ar]['order_status'] = "<span class='text-success'><b>".$arr[$ar]['order_status']."</b></span>";
-                $arr[$ar]['action'] = "<a href='#' class='xcrud-action btn btn-success btn-sm' onClick='viewOrderHistory(".'"'.$arr[$ar]['id'].'"'.");'><i class='fa fa-search'></i></a><a href='#' class='xcrud-action btn btn-danger btn-sm' onClick='removeOrder(".'"'.$arr[$ar]['id'].'"'.");'><i class='fa fa-remove'></i></a>";
+                
             }
         echo json_encode($arr);
     }
@@ -208,7 +226,7 @@ class Order_tracking extends CI_Controller {
             if($cls=="container_no") {
                 $data['container_no'] = $this->uri->segment(8);
             }
-            elseif($cls=="unit"){
+            elseif($cls=="unit_id"){
                 $data['unit_id'] = $this->uri->segment(8);
             }
             elseif($cls=="last_position"){
@@ -217,18 +235,21 @@ class Order_tracking extends CI_Controller {
             elseif($cls=="status"){
                 $data['status'] = $this->uri->segment(8);
             }
+            elseif($cls=="dn_no"){
+                $data['dn_no'] = $this->uri->segment(8);
+            }
             else die('parameter error');
             
             $data['updated_by'] = USER_ID;
-            $data['order_status'] = "<span class='text-info'><b>ON PROGRESS</b></span>";
+            $data['order_status'] = "ON PROGRESS";
             $data['last_updated'] = Date('Y-m-d H:i:s');
             //die(print_r($data));
             //$this->cts_model->updateLastRecord('t_tracking',$data['container_no']);
             $this->db->where('id',$data['id']);
             $this->db->update('t_order', $data);
-            //$query = $this->db->submitContainerTracking($table,$data);
             
-//            $this->db->where('payroll_id', $data['payroll_id']);
+            //$query = $this->db->submitTableData(,$data);
+            //$this->db->where('payroll_id', $data['payroll_id']);
 //            $query = $this->db->update('t_history' ,$data);
         }
         else die('parameter not found');
@@ -242,22 +263,50 @@ class Order_tracking extends CI_Controller {
         
         
         //die(print_r($data));
-        $containers = $data['containers'];
+        $cont_40feet = $data['cont_40feet'];
+        $cont_20feet = $data['cont_20feet'];
+        $containers = $cont_40feet+$cont_20feet;
         
         unset($data['customer']);
-        unset($data['containers']);
+        unset($data['cont_40feet']);
+        unset($data['cont_20feet']);
         for($x=0;$x<$containers;$x++){
+            if($cont_40feet>0){
+                $data['container_size'] = '40';
+                $cont_40feet--;
+            }
+            else{
+                $data['container_size'] = '20';
+                $cont_20feet--;
+            }
             $this->cts_model->submitTableData('t_order',$data);
         }
         //$this->cts_model->submitComplaint('customer_complaint', $data);
     }
     
+    function closeOrder(){
+		if ($this->uri->segment(3) !== FALSE) $id = $this->uri->segment(4);
+		else die('Parameter not found');
+		
+                $data['order_status'] = 'COMPLETED';
+                $data['last_updated'] = Date('Y-m-d h:i:s');
+                $data['updated_by'] = USER_ID;
+		$this->db->where('id', $id);
+		if($this->db->update('t_order',$data)) echo "Update Success";
+		else echo "Delete Error";
+		
+		return false;
+	}
+    
     function removeOrder(){
 		if ($this->uri->segment(3) !== FALSE) $id = $this->uri->segment(4);
 		else die('Parameter not found');
 		
+		$data['order_status'] = 'CANCELED';
+                $data['last_updated'] = Date('Y-m-d h:i:s');
+                $data['updated_by'] = USER_ID;
 		$this->db->where('id', $id);
-		if($this->db->delete('t_order')) echo "Delete Success";
+		if($this->db->update('t_order',$data)) echo "Update Success";
 		else echo "Delete Error";
 		
 		return false;

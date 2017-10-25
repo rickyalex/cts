@@ -1,0 +1,52 @@
+<?php  if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+
+$active_group = 'default';
+$active_record = TRUE;
+
+$db['default']['hostname'] = '10.20.0.31';
+$db['default']['username'] = 'root';
+$db['default']['password'] = base64_decode ('YzFsM2cwbmJjczIwMTc=');
+$db['default']['database'] = 'cts';
+$db['default']['dbdriver'] = 'mysqli';
+$db['default']['dbprefix'] = '';
+$db['default']['pconnect'] = TRUE;
+$db['default']['db_debug'] = TRUE;
+$db['default']['cache_on'] = FALSE;
+$db['default']['cachedir'] = '';
+$db['default']['char_set'] = 'utf8';
+$db['default']['dbcollat'] = 'utf8_general_ci';
+$db['default']['swap_pre'] = '';
+$db['default']['autoinit'] = TRUE;
+$db['default']['stricton'] = FALSE;
+
+$db['DB']['hostname'] = '10.20.0.31';
+$db['DB']['username'] = 'root';
+$db['DB']['password'] = base64_decode ('YzFsM2cwbmJjczIwMTc=');
+$db['DB']['database'] = 'master';
+$db['DB']['dbdriver'] = 'mysqli';
+$db['DB']['dbprefix'] = '';
+$db['DB']['pconnect'] = TRUE;
+$db['DB']['db_debug'] = TRUE;
+$db['DB']['cache_on'] = FALSE;
+$db['DB']['cachedir'] = '';
+$db['DB']['char_set'] = 'utf8';
+$db['DB']['dbcollat'] = 'utf8_general_ci';
+$db['DB']['swap_pre'] = '';
+$db['DB']['autoinit'] = TRUE;
+$db['DB']['stricton'] = FALSE;
+
+$db['DB2']['hostname'] = '10.2.2.32';
+$db['DB2']['username'] = 'root';
+$db['DB2']['password'] = base64_decode ('YzFsM2cwbmJjczIwMTc=');
+$db['DB2']['database'] = 'ims';
+$db['DB2']['dbdriver'] = 'mysqli';
+$db['DB2']['dbprefix'] = '';
+$db['DB2']['pconnect'] = TRUE;
+$db['DB2']['db_debug'] = TRUE;
+$db['DB2']['cache_on'] = FALSE;
+$db['DB2']['cachedir'] = '';
+$db['DB2']['char_set'] = 'utf8';
+$db['DB2']['dbcollat'] = 'utf8_general_ci';
+$db['DB2']['swap_pre'] = '';
+$db['DB2']['autoinit'] = TRUE;
+$db['DB2']['stricton'] = FALSE;

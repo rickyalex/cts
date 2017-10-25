@@ -1,0 +1,63 @@
+<!doctype html>
+    <html>
+        <head>
+            <title>Monitoring System | <?php echo $title;?></title>
+            <link href="<?php echo base_url('assets/css/bootstrap.min.css');?>" rel="stylesheet">
+            <link href="<?php echo base_url('assets/font-awesome/css/font-awesome.css');?>" rel="stylesheet">
+            <link href="<?php echo base_url('assets/css/plugins/morris/morris.css');?>" rel="stylesheet">
+            <link href="<?php echo base_url('assets/css/plugins/timeline/timeline.css');?>" rel="stylesheet">
+            <script src="<?php echo base_url('assets/js/jquery.min.js');?>"></script>
+            <script src="<?php echo base_url('assets/js/bootstrap.js');?>"></script>
+        </head>
+        <body>
+            <div class="navbar navbar-default">
+				<div class="container" align="right">
+					<div class="navbar-header">
+						<a class="navbar-brand" href="<?php echo site_url('dashboard');?>">Trace & Tracking System</a>
+					</div>
+				</div>
+			</div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <span class="glyphicon glyphicon-lock"></span> Login
+                            </div>
+                            <div class="panel-body">
+                                <?php $attrib = array('class' => 'form-login'); echo form_open("auth/login",$attrib);?>
+                                <?php echo form_input($identity, '', 'class="form-control" placeholder="Email Address" autofocus="autofocus"');?>
+								<br>
+									<?php echo form_input($password,  '', 'class="form-control" placeholder="Password"');?>
+                                <div class="form-group">
+									<div class="col-sm-offset-3 col-sm-12">
+										<div class="checkbox">
+											<label><input type="checkbox"/>Remember me</label>
+										</div>
+									</div>
+								</div>
+									<div class="form-group last">
+                                        <div class="col-sm-offset-3 col-sm-12">
+                                            <button type="submit" class="btn btn-success btn-sm">Sign in</button>
+											<button type="reset" class="btn btn-default btn-sm">Reset</button>
+                                        </div>
+                                    </div>
+                            </div>
+                            <div class="panel-footer">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8 ">
+                        <legend>Welcome</legend>
+                    </div>
+                </div>
+            </div>
+            <!-- Core Scripts - Include with every page -->
+			<script src="<?php echo base_url('assets/js/holder.js');?>"></script>
+			<script src="<?php echo base_url('assets/js/bootstrap.min.js');?>"></script>
+			<script src="<?php echo base_url('assets/js/sb-admin-2.js');?>"></script>
+			<script src="<?php echo base_url('assets/js/plugins/metisMenu/metisMenu.min.js');?>"></script>
+			<script src="<?php echo base_url('assets/js/plugins/raphael/raphael-min.js');?>"></script>
+			<script src="<?php echo base_url('assets/js/plugins/morris/morris.min.js');?>"></script>
+        </body>
+    </html>
