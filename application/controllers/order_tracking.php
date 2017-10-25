@@ -212,7 +212,7 @@ class Order_tracking extends CI_Controller {
         echo json_encode($arr);
     }
 
-    function updateStatus() {//test
+    function updateStatus() {//test123
         if ($this->uri->segment(3) !== FALSE) {
             $data['id'] = $this->uri->segment(4);
             //$data['container_no'] = $this->cts_model->getContainerNo($data['id']);
