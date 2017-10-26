@@ -94,8 +94,8 @@
 
                                             <table class="table table-striped">
                                                 <thead>
-                                                    <tr><th>ID Order		</th><th><?php //echo $DataMasterContainer['id'];      ?></th></tr>
-                                                    <tr><th>Order No	</th><th><?php //echo $DataMasterContainer['container_no'];      ?></th></tr>
+                                                    <tr><th>ID Order		</th><th><?php //echo $DataMasterContainer['id'];        ?></th></tr>
+                                                    <tr><th>Order No	</th><th><?php //echo $DataMasterContainer['container_no'];        ?></th></tr>
                                                 </thead>
 
                                             </table>
@@ -116,7 +116,7 @@
                                                     <div class="col-sm-12 invoice-col">
                                                         <!--div id="toolbar">
                                                                 <button id="add_training" class="btn btn-success">
-                                                                        <i class="glyphicon glyphicon-add"></i> Add
+                                                                       || <i class="glyphicon glyphicon-add"></i> Add
                                                                 </button>
                                                         </div-->
                                                         <table class="table table-striped">
