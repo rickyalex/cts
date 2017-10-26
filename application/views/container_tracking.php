@@ -1,5 +1,5 @@
 <script src="<?php echo base_url(); ?>assets/vendors/jquery/dist/jquery.min.js"></script>
-<!-- Bootstrap -->
+<!-- Bootstrap view container tracking-->
 <script src="<?php echo base_url(); ?>assets/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
 <link href="<?php echo base_url(); ?>assets/vendors/bootstrap-table/dist/bootstrap-table.css" rel="stylesheet">
 <link href="<?php echo base_url(); ?>assets/vendors/bootstrap-table/dist/bootstrap-editable.css" rel="stylesheet">
@@ -27,6 +27,7 @@
 
 <link href="<?php echo base_url(); ?>assets/vendors/datetimepicker/build/css/bootstrap-datetimepicker.min.css" rel="stylesheet">
 <script src="<?php echo base_url(); ?>assets/vendors/datetimepicker/build/js/bootstrap-datetimepicker.min.js"></script>
+
 
 <style>
     #tonage:hover,
@@ -110,15 +111,15 @@
                 field: 'container_id',
                 title: 'Container ID',
                 class: 'container_id'
-            },{
+            }, {
                 field: 'container_no',
                 title: 'Container No',
                 class: 'container_no'
-            },{
+            }, {
                 field: 'size',
                 title: 'Container Size',
                 class: 'size'
-            },{
+            }, {
                 field: 'owner',
                 title: 'Owner',
                 class: 'owner'
@@ -131,7 +132,7 @@
                     title: 'Customer',
                     source: <?php echo $all_customer; ?>
                 }
-            },{
+            }, {
                 field: 'last_position',
                 title: 'Last Position',
                 class: 'last_position',
@@ -148,12 +149,11 @@
                         {value: 'ON_DEPO_CDP', text: 'ON DEPO CDP'},
                         {value: 'ON_DEPO_SBY', text: 'ON DEPO SBY'},
                         {value: 'ON_DEPO_CLG', text: 'ON DEPO CLG'},
-                        {value: 'ON_CUSTOMER_CDP', text: 'ON CUSTOMER CDP'},
-                        {value: 'ON_CUSTOMER_SBY', text: 'ON CUSTOMER SBY'},
-                        {value: 'ON_CUSTOMER_CLG', text: 'ON CUSTOMER CLG'}
+                        {value: 'ON_CUSTOMER_WEST', text: 'ON CUSTOMER WEST'},
+                        {value: 'ON_CUSTOMER_EAST', text: 'ON CUSTOMER EAST'}
                     ]
                 }
-            },{
+            }, {
                 field: 'status',
                 title: 'Status',
                 class: 'status',
@@ -162,34 +162,43 @@
                     title: 'Status',
                     source: [
                         {value: 'FULL', text: 'FULL'},
-                        {value: 'EMPTY', text: 'EMPTY'}
+                        {value: 'EMPTY', text: 'EMPTY'},
+                        {value: 'LOAD', text: 'LOAD'},
+                        {value: 'UNLOAD', text: 'UNLOAD'}
                     ]
                 }
             }, {
                 field: 'last_updated',
                 title: 'Last Updated'
+            }, {
+                field: 'aging',
+                title: 'Container Aging'
             }]
     });
 
-    $(document).on('click', '.editable-submit', function () {
+    function viewTracking(container_no) {
+        //alert('container_no adalah '+container_no);
+        window.open("<?php echo base_url(); ?>container_tracking/getDataPerID/container_no/" + container_no, '_parent');
+    }
+
+    $(document).on('click', '.editable-submit', function() {
         var container = $(this).closest('tr').find('td.container_id').text();
-        if($(this).closest('td').hasClass("customer")){
+        if ($(this).closest('td').hasClass("customer")) {
             var cls = "customer";
-        }
-        else if($(this).closest('td').hasClass("last_position")){
+        } else if ($(this).closest('td').hasClass("last_position")) {
             var cls = "last_position";
-        }
-        else var cls = "status";
+        } else
+            var cls = "status";
         var data = $('.input-sm').val();
         //alert(z);
         $.ajax({
             type: "POST",
             url: "<?php echo base_url(); ?>container_tracking/updateStatus/id/" + container + "/cls/" + cls + "/data/" + data,
-            success: function (s) {
-                alert(s);
+            success: function(s) {
+                alert('Data Update Succeed');//Warning
             }
             ,
-            error: function (e) {
+            error: function(e) {
                 alert('Update Error');
             }
         });
