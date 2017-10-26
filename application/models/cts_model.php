@@ -439,6 +439,22 @@ where a.active = 'Y' order by b.last_updated desc, a.owner");
         return $result;
     }
 
+    public function getOrderHistoryList($id) {
+        $query = $this->DB->query("SELECT
+                cts.t_order_history.id as id,
+                cts.t_order_history.id_t_order as id_t_order,
+                cts.t_order_history.order_no as order_no,
+                cts.t_order_history.unit_id as unit_id,
+                cts.t_order_history.container_no as container_no,
+                cts.t_order_history.dn_no as dn_no,
+                cts.t_order_history.last_position as last_position,
+                cts.t_order_history.status as status,
+                cts.t_order_history.jam_perubahan as jam_perubahan
+                FROM cts.t_order_history WHERE cts.t_order_history.id_t_order = '" . $id . "' ORDER BY cts.t_order_history.jam_perubahan DESC");
+        $result = $query->result_array();
+        return $result;
+    }
+
     function getContainerListCustomer($container_no) {
         $query = $this->db->query("SELECT #(cts.t_history_customer.id) AS id ,
 		#(cts.t_history_customer.container_no) AS container_no ,
