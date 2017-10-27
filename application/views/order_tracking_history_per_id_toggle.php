@@ -94,8 +94,12 @@
 
                                             <table class="table table-striped">
                                                 <thead>
-                                                    <tr><th>ID Order		</th><th><?php //echo $DataMasterContainer['id'];        ?></th></tr>
-                                                    <tr><th>Order No	</th><th><?php //echo $DataMasterContainer['container_no'];        ?></th></tr>
+                                                    <tr><th>ID Order</th><th><?php echo $history_per_id['id']; ?></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></tr>
+                                                    <tr><th>Customer</th><th><?php echo $history_per_id['customer_id']; ?></th><th></th<th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></tr>
+                                                    <tr><th>Order Date</th><th><?php echo $history_per_id['order_date']; ?></th><th></th<th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></tr>
+                                                    <tr><th>Request Date</th><th><?php echo $history_per_id['request_date']; ?></th><th></th<th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></tr>
+                                                    <tr><th>Order No</th><th><?php echo $history_per_id['order_no']; ?></th><th></th<th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></th><th></th><th></th></tr>
+
                                                 </thead>
 
                                             </table>
@@ -105,8 +109,8 @@
 
                                         <ul class="nav nav-tabs">
                                             <li class="active"><a href="#tab_1" data-toggle="tab">History Order Tracking</a></li>
-                                            <li><a href="#tab_2" data-toggle="tab">History Last Position</a></li>
-                                            <li><a href="#tab_3" data-toggle="tab">History Status</a></li>
+                                            <li><a href="#tab_2" data-toggle="tab">...</a></li>
+                                            <li><a href="#tab_3" data-toggle="tab">...</a></li>
                                         </ul>
                                         <div class="tab-content">
                                             <div class="tab-pane active" id="tab_1">
@@ -123,24 +127,49 @@
                                                             <thead>
                                                                 <tr>
                                                                     <th>No</th>
-                                                                    <!--<th>Id</th>
-                                                                    <th>Container No</th>-->
+                                                                    <th>Order No</th>
                                                                     <th>Unit No</th>
+                                                                    <th>Container No</th>
+
                                                                     <th>DN No</th>
                                                                     <th>Last Position</th>
                                                                     <th>Status</th>
-                                                                    <th>Waktu update</th>
+
+                                                                    <th>Order Tracking Updated</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
-
+                                                                <?php
+                                                                $x = 1;
+                                                                if ($history_per_id_detail == null) {
+                                                                    ?>
+                                                                    <tr><td colspan="5">Tidak Ada Data</td></tr>
+                                                                    <?php
+                                                                } else {
+                                                                    foreach ($history_per_id_detail as $item) {
+                                                                        ?>
+                                                                        <tr>
+                                                                            <td><?php echo $x; ?></td>
+                                                                            <?php
+                                                                            foreach ($item as $key) {
+                                                                                ?>
+                                                                                <td><?php echo $key; ?></td>
+                                                                                <?php
+                                                                            }
+                                                                            ?>
+                                                                        </tr>
+                                                                        <?php
+                                                                        $x++;
+                                                                    }
+                                                                }
+                                                                ?>
                                                             </tbody>
                                                         </table>
                                                     </div>
                                                 </div>
 
                                             </div><!-- /.tab-pane -->
-                                            <div class="tab-pane" id="tab_2">
+                                            <div class="tab-pane" id="tab_2_">
                                                 <div class="row invoice-info">
                                                     <div class="col-sm-12 invoice-col">
                                                         <table class="table table-striped">
@@ -159,7 +188,7 @@
                                                     </div>
                                                 </div>
                                             </div><!-- /.tab-pane -->
-                                            <div class="tab-pane" id="tab_3">
+                                            <div class="tab-pane" id="tab_3_">
                                                 <div class="row invoice-info">
                                                     <div class="col-sm-12 invoice-col">
                                                         <table class="table table-striped">
