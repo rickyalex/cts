@@ -157,6 +157,22 @@ class Order_tracking extends CI_Controller {
         echo json_encode($arr);
     }
 
+    public function viewOrderHistory() {
+        $id = $this->uri->segment(4); //lihat order history berdasar ID (untuk line tersebut apa saja yg dilakukan dilihat dari Unit No Container No, DN No, Last Position, Status)
+
+        $history_per_id = $this->cts_model->getOrderHistoryList($id);
+        $history_per_id_detail = $this->cts_model->getOrderHistoryListDetail($id);
+        //die(print_r($history_per_id['id'])); getOrderHistoryListDetail
+
+        $data['history_per_id_detail'] = $history_per_id_detail;
+        $data['history_per_id'] = $history_per_id;
+        //die(print_r($data['history_per_id']['id']));
+        $this->load->view('template/header');
+        $this->load->view('template/sidebar');
+        $this->load->view('order_tracking_history_per_id_toggle', $data);
+        $this->load->view('template/footer');
+    }
+
     function getOrderData() {
         $arr = $this->cts_model->getOrderData();
 
@@ -167,9 +183,9 @@ class Order_tracking extends CI_Controller {
             if (GROUPNAME == "Marketing") {
                 $arr[$ar]['unit_id'] = isset($arr[$ar]['unit_id']) ? $this->cts_model->getNomorUnit($arr[$ar]['unit_id']) : '-';
                 $arr[$ar]['container_no'] = isset($arr[$ar]['container_no']) ? $this->cts_model->getContainerNo($arr[$ar]['container_no']) : '-';
-                $arr[$ar]['action'] = "<a href='#' class='xcrud-action btn btn-info btn-sm' onClick='viewOrderHistory(" . '"' . $arr[$ar]['id'] . '"' . ");'><i class='fa fa-search'></i></a><a href='#' class='xcrud-action btn btn-danger btn-sm' onClick='removeOrder(" . '"' . $arr[$ar]['id'] . '"' . ");'><i class='fa fa-remove'></i></a>";
+                $arr[$ar]['action'] = "<a href='#' class='xcrud-action btn btn-info btn-sm' onClick='viewOrderHistory(" . '"' . $arr[$ar]['id'] . '"' . ");'><i class='fa fa-search'></i></a><a href='#' class='btn btn-danger btn-sm' onClick='removeOrder(" . '"' . $arr[$ar]['id'] . '"' . ");'><i class='fa fa-remove'></i></a>";
             } elseif (GROUPNAME == "RW")
-                $arr[$ar]['action'] = "<a href='#' class='xcrud-action btn btn-info btn-sm' onClick='viewOrderHistory(" . '"' . $arr[$ar]['id'] . '"' . ");'><i class='fa fa-search'></i></a><a href='#' class='xcrud-action btn btn-success btn-sm' onClick='closeOrder(" . '"' . $arr[$ar]['id'] . '"' . ");'><i class='fa fa-check'></i></a>";
+                $arr[$ar]['action'] = "<a href='#' class='xcrud-action btn btn-info btn-sm' onClick='viewOrderHistory(" . '"' . $arr[$ar]['id'] . '"' . ");'><i class='fa fa-search'></i></a><a href='#' class='btn btn-success btn-sm' onClick='closeOrder(" . '"' . $arr[$ar]['id'] . '"' . ");'><i class='fa fa-check'></i></a>";
 
             if ($arr[$ar]['order_status'] == "ON PROGRESS")
                 $arr[$ar]['order_status'] = "<span class='text-info'><b>" . $arr[$ar]['order_status'] . "</b></span>";
