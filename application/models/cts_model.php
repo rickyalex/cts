@@ -439,22 +439,6 @@ where a.active = 'Y' order by b.last_updated desc, a.owner");
         return $result;
     }
 
-    public function getOrderHistoryList($id) {
-        $query = $this->DB->query("SELECT
-                cts.t_order_history.id as id,
-                cts.t_order_history.id_t_order as id_t_order,
-                cts.t_order_history.order_no as order_no,
-                cts.t_order_history.unit_id as unit_id,
-                cts.t_order_history.container_no as container_no,
-                cts.t_order_history.dn_no as dn_no,
-                cts.t_order_history.last_position as last_position,
-                cts.t_order_history.status as status,
-                cts.t_order_history.jam_perubahan as jam_perubahan
-                FROM cts.t_order_history WHERE cts.t_order_history.id_t_order = '" . $id . "' ORDER BY cts.t_order_history.jam_perubahan DESC");
-        $result = $query->result_array();
-        return $result;
-    }
-
     function getContainerListCustomer($container_no) {
         $query = $this->db->query("SELECT #(cts.t_history_customer.id) AS id ,
 		#(cts.t_history_customer.container_no) AS container_no ,
@@ -500,6 +484,39 @@ where a.active = 'Y' order by b.last_updated desc, a.owner");
 		(master.m_container.active) AS active
 		FROM master.m_container WHERE master.m_container.id ='$container_no'");
         $result = $query->row_array();
+        return $result;
+    }
+
+    public function getOrderHistoryList($id) {
+        $query = $this->DB->query("SELECT
+                cts.t_order.id as id,
+                (SELECT master.m_customer_tracking.customer_name from master.m_customer_tracking where master.m_customer_tracking.id = cts.t_order.customer_id) as customer_id,
+                cts.t_order.order_date as order_date,
+                cts.t_order.request_date as request_date,
+                cts.t_order.order_no as order_no
+
+
+
+                FROM cts.t_order WHERE cts.t_order.id = '" . $id . "' ORDER BY cts.t_order.date_created DESC");
+        $result = $query->row_array(); //lupa ini jangan result_array tapi row_array
+        return $result;
+    }
+
+    function getOrderHistoryListDetail($id) {
+        $query = $this->db->query("SELECT
+                #cts.t_order_history.id as id,
+                #cts.t_order_history.id_t_order as id_t_order,
+                cts.t_order_history.order_no as order_no,
+                (SELECT ims.trans_mstr_unit.nomor_unit FROM ims.trans_mstr_unit where ims.trans_mstr_unit.id = cts.t_order_history.unit_id) as unit_id,
+                #cts.t_order_history.unit_id as unit_id,
+                (SELECT master.m_container.container_no FROM master.m_container where master.m_container.id = cts.t_order_history.container_no) as container_no,
+                #cts.t_order_history.container_no as container_no,
+                cts.t_order_history.dn_no as dn_no,
+                cts.t_order_history.last_position as last_position,
+                cts.t_order_history.status as status,
+                cts.t_order_history.jam_perubahan as jam_perubahan
+                FROM cts.t_order_history WHERE cts.t_order_history.id_t_order = '" . $id . "' ORDER BY cts.t_order_history.jam_perubahan DESC");
+        $result = $query->result_array();
         return $result;
     }
 
